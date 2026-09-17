@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layers</title>
+    <style>
+        @layer base,special;
+
+       @layer base {
+        .para {
+            font-size: 30px;
+            color: red;
+        }
+       }
+
+       @layer special {
+        .highlight-para {
+            font-size: 30px;
+            color: blue;
+        }
+       }
+       @layer reset{
+        .para{
+            font-size: 20px;
+            color: black;
+        }
+       }
+       @layer utility{
+        .para{
+            font-size: 20px;
+            color: darkgreen;
+        }
+       }
+       @layer base,reset,utility{
+        .para{
+            font-size: 20px;
+            color: purple;
+        }
+       }
+       @layer special,reset,utility{
+        .para{
+            font-size: 20px;
+            color: orange;
+        }
+       }
+       @layer base,special,reset,utility{
+        .para{
+            font-size: 20px;
+            color: brown;
+        }
+       }
+    </style>
+</head>
+<body>
+    <p class="para highlight-para">Hello World!!</p>
+</body>
+</html>

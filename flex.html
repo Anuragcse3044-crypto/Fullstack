@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .container {
+            display: flex;
+            /* justify-content: flex-end; to start from the end */
+            /* justify-content: space-between; to give equal space between the boxes */
+            height:90vh;
+            flex-direction:row; /* to make the boxes in a row */
+            /* justify-content:space-around; */
+            justify-content:center; /* to make the boxes in the center */
+            align-items:center; /* to make the boxes in the center vertically */
+
+
+        }
+  
+        .container>div {
+            background-color: black;
+            color: white;
+            height: 100px;
+            align-content: center;
+            text-align: center;
+        }
+
+        #box1 {
+            flex-basis: 150px;
+            background-color: rgb(255, 0, 0);
+            /* flex-grow:2; */
+            /* flex:2 2 150px; */
+        }
+
+        #box2 {
+            flex-basis: 150px;
+            background-color: rgb(253, 253, 0);
+            /* flex-grow:1; */
+        }
+
+        #box3 {
+            flex-basis: 150px;
+            background-color: green;
+            /* flex-grow:2; */
+
+        }
+
+        #box4 {
+            flex-basis: 150px;
+            background-color: blue;
+            /* flex-grow:1; */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="box1">1</div>
+        <div id="box2">2</div>
+        <div id="box3">3</div>
+        <div id="box4">4</div>
+
+    </div>
+</body>
+
+</html>
