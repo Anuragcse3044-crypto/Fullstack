@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Store</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #F8FAFC;
+            color: #111827;
+        }
+
+        nav {
+            height: 70px;
+            padding: 0 30px;
+            background: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        nav a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: #6B7280;
+        }
+
+        .main {
+            display: flex;
+            gap: 32px;
+            padding: 30px;
+        }
+
+        .filter {
+            width: 240px;
+            background: white;
+            padding: 20px;
+            border: 1px solid #E5E7EB;
+            border-radius: 10px;
+        }
+
+        .filter h3 {
+            margin-top: 0;
+        }
+
+        .products {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .card {
+            background: white;
+            padding: 16px;
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: 0 5px 15px #ddd;
+        }
+
+        .image {
+            height: 220px;
+            background: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.3s;
+        }
+
+        .card:hover img {
+            transform: scale(1.08);
+        }
+
+        .category {
+            font-size: 13px;
+            color: #6B7280;
+            margin-top: 12px;
+        }
+
+        .card h3 {
+            font-size: 16px;
+            margin: 8px 0;
+        }
+
+        .rating {
+            color: #F59E0B;
+        }
+
+        .price {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .old {
+            font-size: 14px;
+            color: #6B7280;
+            text-decoration: line-through;
+        }
+
+        .sale {
+            color: #DC2626;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        button {
+            padding: 10px;
+            background: #2563EB;
+            color: white;
+            border: 0;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1D4ED8;
+        }
+
+        @media (max-width: 1279px) {
+            .products {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 1023px) {
+            .main {
+                flex-direction: column;
+            }
+
+            .filter {
+                width: 100%;
+            }
+
+            .products {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 639px) {
+            nav a {
+                display: none;
+            }
+
+            .main {
+                padding: 15px;
+            }
+
+            .products {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <h2>ShopNow</h2>
+
+        <div>
+            <a href="#">Home</a>
+            <a href="#">Products</a>
+            <a href="#">Cart</a>
+        </div>
+    </nav>
+
+    <div class="main">
+
+        <div class="filter">
+            <h3>Filters</h3>
+            <p>Category</p>
+            <input type="checkbox"> Electronics<br>
+            <input type="checkbox"> Clothing<br>
+            <input type="checkbox"> Shoes<br>
+            <input type="checkbox"> Accessories
+        </div>
+
+        <div class="products">
+
+            <div class="card">
+                <div class="image">
+                    <img src="https://via.placeholder.com/300x220" alt="Product">
+                </div>
+                <span class="category">Electronics</span>
+                <h3>Wireless Headphones</h3>
+                <div class="rating">★★★★★</div>
+                <div class="price">₹1,999 <span class="old">₹2,499</span></div>
+                <span class="sale">SALE</span>
+                <button>Add to Cart</button>
+            </div>
+
+            <div class="card">
+                <div class="image">
+                    <img src="https://via.placeholder.com/300x220" alt="Product">
+                </div>
+                <span class="category">Clothing</span>
+                <h3>Classic T-Shirt</h3>
+                <div class="rating">★★★★☆</div>
+                <div class="price">₹699 <span class="old">₹999</span></div>
+                <span class="sale">SALE</span>
+                <button>Add to Cart</button>
+            </div>
+
+            <div class="card">
+                <div class="image">
+                    <img src="https://via.placeholder.com/300x220" alt="Product">
+                </div>
+                <span class="category">Shoes</span>
+                <h3>Running Shoes</h3>
+                <div class="rating">★★★★★</div>
+                <div class="price">₹2,499</div>
+                <span class="sale">NEW</span>
+                <button>Add to Cart</button>
+            </div>
+
+            <div class="card">
+                <div class="image">
+                    <img src="https://via.placeholder.com/300x220" alt="Product">
+                </div>
+                <span class="category">Accessories</span>
+                <h3>Smart Watch</h3>
+                <div class="rating">★★★★☆</div>
+                <div class="price">₹3,999 <span class="old">₹4,499</span></div>
+                <span class="sale">SALE</span>
+                <button>Add to Cart</button>se=dw33333333333333===============================
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
