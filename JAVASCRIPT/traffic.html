@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Traffic Light Simulator</title>
+</head>
+<body>
+  <h1>Traffic Light Simulator</h1>
+  <label for="lightColor">Enter a light color (red, yellow, or green):</label>
+  <input type="text" id="lightColor">
+  <button type="button" id="checkLight">Check</button>
+  <p id="result"></p>
+
+  <script>
+    document.getElementById("checkLight").addEventListener("click", function () {
+      let lightColor = document.getElementById("lightColor").value.toLowerCase().trim();
+      let result = document.getElementById("result");
+
+      if (lightColor === "red") {
+        result.textContent = "Stop";
+      } else if (lightColor === "yellow") {
+        result.textContent = "Slow down";
+      } else if (lightColor === "green") {
+        result.textContent = "Go";
+      } else {
+        result.textContent = "Enter red, yellow, or green.";
+      }
+    });
+  </script>
+</body>
+</html>

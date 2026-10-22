@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FizzBuzz</title>
+</head>
+<body>
+  <h1>FizzBuzz</h1>
+  <label for="number">Enter a number:</label>
+  <input type="number" id="number">
+  <button type="button" id="check">Check</button>
+  <p id="output"></p>
+  <script>
+    document.getElementById("check").addEventListener("click", function () {
+      const input = document.getElementById("number").value;
+      const output = document.getElementById("output");
+
+      if (input === "") {
+        output.textContent = "Please enter a number.";
+        return;
+      }
+
+      const number = Number(input);
+
+      if (number % 3 === 0 && number % 5 === 0) {
+        output.textContent = "FizzBuzz";
+      } else if (number % 3 === 0) {
+        output.textContent = "Fizz";
+      } else if (number % 5 === 0) {
+        output.textContent = "Buzz";
+      } else {
+        output.textContent = number;
+      }
+    });
+  </script>
+</body>
+</html>

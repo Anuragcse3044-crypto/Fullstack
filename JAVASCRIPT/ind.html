@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celsius to Fahrenheit Converter</title>
+    
+</head>
+<body>
+    <main>
+        <h1>Temperature Converter</h1>
+        <p>Convert Celsius to Fahrenheit</p>
+        <p>Temperature in Celsius: <span id="celsius"></span>°C</p>
+        <p>Temperature in Fahrenheit: <span id="fahrenheit"></span>°F</p>
+    </main>
+    <script>
+        const temperatureCelsius = 25;
+        const temperatureFahrenheit = temperatureCelsius * 9 / 5 + 32;
+        console.log(`Temperature in Celsius: ${temperatureCelsius}°C`);
+        console.log(`Temperature in Fahrenheit: ${temperatureFahrenheit}°F`);
+        // document.getElementById("celsius").textContent = temperatureCelsius;
+        // document.getElementById("fahrenheit").textContent = temperatureFahrenheit;
+    </script>
+</body>
+</html>
