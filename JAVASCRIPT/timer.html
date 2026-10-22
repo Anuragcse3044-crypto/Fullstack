@@ -1,0 +1,49 @@
+<!-- // wap using setTimeout and setInterval ,get element  by id to create a countdown timer of 15 minutes.
+
+// Here is an example of a countdown timer using `setTimeout` and `setInterval` that counts down from 15 minutes (900 seconds) and updates an HTML element with the remaining time:```html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer</title>
+</head>
+<body>
+    <h1>Countdown Timer</h1>
+    <p id="timer">15:00</p>
+	<label for="minutesInput">Minutes:</label>
+	<input id="minutesInput" type="number" min="1" value="15">
+	<button id="startButton" type="button">Start timer</button>
+
+    <script>
+		const timerElement = document.getElementById('timer');
+		const minutesInput = document.getElementById('minutesInput');
+		let intervalId;
+
+		document.getElementById('startButton').addEventListener('click', () => {
+			const minutes = Number(minutesInput.value);
+			if (!Number.isFinite(minutes) || minutes <= 0) return;
+
+			clearInterval(intervalId);
+			let countdownTime = Math.floor(minutes * 60);
+
+			function updateTimerDisplay() {
+				const remainingMinutes = Math.floor(countdownTime / 60);
+				const seconds = countdownTime % 60;
+				timerElement.textContent = `${remainingMinutes}:${String(seconds).padStart(2, '0')}`;
+			}
+
+			updateTimerDisplay();
+			intervalId = setInterval(() => {
+				countdownTime--;
+				updateTimerDisplay();
+
+				if (countdownTime <= 0) {
+					clearInterval(intervalId);
+					timerElement.textContent = '00:00';
+				}
+			}, 1000);
+		});
+    </script>
+</body>
+</html>
