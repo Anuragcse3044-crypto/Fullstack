@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Rock Paper Scissors</title>
+</head>
+<body>
+	<h1>Rock Paper Scissors</h1>
+	<p>Choose your move:</p>
+
+	<button type="button" onclick="play('rock')">Rock</button>
+	<button type="button" onclick="play('paper')">Paper</button>
+	<button type="button" onclick="play('scissors')">Scissors</button>
+
+	<p id="result" aria-live="polite">Make your choice to play.</p>
+	<p id="score">You: 0 | Computer: 0</p>
+
+	<script>
+		let playerScore = 0;
+		let computerScore = 0;
+		const choices = ['rock', 'paper', 'scissors'];
+
+		function play(playerChoice) {
+			const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+			let outcome;
+
+			if (playerChoice === computerChoice) {
+				outcome = "It's a tie!";
+			} else if (
+				(playerChoice === 'rock' && computerChoice === 'scissors') ||
+				(playerChoice === 'paper' && computerChoice === 'rock') ||
+				(playerChoice === 'scissors' && computerChoice === 'paper')
+			) {
+				playerScore++;
+				outcome = 'You win!';
+			} else {
+				computerScore++;
+				outcome = 'Computer wins!';
+			}
+
+			document.getElementById('result').textContent =
+				`You chose ${playerChoice}. Computer chose ${computerChoice}. ${outcome}`;
+			document.getElementById('score').textContent =
+				`You: ${playerScore} | Computer: ${computerScore}`;
+		}
+	</script>
+</body>
+</html>
