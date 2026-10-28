@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f6fa">
+  <title>Quiz Arena</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 700px; margin: 20px auto; padding: 0 12px; line-height: 1.5; }
+    .hidden { display: none; }
+    button { padding: 8px 12px; margin: 4px; cursor: pointer; }
+    .option-button { display: block; width: 100%; text-align: left; }
+    .correct { background: #d8f3dc; }
+    .incorrect { background: #f8d7da; }
+    .progress-track, .timer-track { height: 8px; margin: 8px 0; background: #eee; }
+    .progress-fill, .timer-fill { height: 100%; background: #777; }
+    .answer-feedback, .review-item { padding: 10px; margin: 10px 0; border: 1px solid #ddd; }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">Q</span>
+        <span>Quiz Arena</span>
+      </div>
+      <span class="top-label">A little challenge, a lot of fun</span>
+    </header>
+
+    <section class="card screen" id="welcome-screen" aria-labelledby="welcome-title">
+      <p class="eyebrow">Ready when you are</p>
+      <h1 id="welcome-title">Put your knowledge to the test.</h1>
+      <p class="intro-copy">Take on 25 quick questions, learn something new, and see how high you can score. You have 30 seconds for each question.</p>
+      <ul class="quiz-facts" aria-label="Quiz details">
+        <li>25 questions</li>
+        <li>30 seconds each</li>
+        <li>Instant explanations</li>
+      </ul>
+      <button class="primary-button" id="start-button" type="button">Start the quiz <span aria-hidden="true">→</span></button>
+    </section>
+
+    <section class="card quiz-screen hidden" id="quiz-screen" aria-labelledby="question-title">
+      <div class="quiz-meta">
+        <span id="question-count">Question 1 of 25</span>
+        <span class="score-pill" id="live-score" aria-live="polite">Score: 0</span>
+      </div>
+      <div class="progress-track" role="progressbar" id="quiz-progress" aria-label="Quiz progress" aria-valuemin="0" aria-valuemax="25" aria-valuenow="0">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <div class="timer-row">
+        <span class="timer-value" id="timer-label" aria-live="polite">00:30 left</span>
+        <div class="timer-track" role="progressbar" id="timer-progress" aria-label="Time remaining" aria-valuemin="0" aria-valuemax="30" aria-valuenow="30">
+          <div class="timer-fill" id="timer-fill"></div>
+        </div>
+      </div>
+      <p class="question-label">Choose one answer</p>
+      <h2 id="question-title" tabindex="-1"></h2>
+      <div class="options" id="options" role="group" aria-labelledby="question-title"></div>
+      <div class="answer-feedback hidden" id="answer-feedback" aria-live="polite"></div>
+      <footer class="quiz-footer">
+        <p class="footer-hint" id="footer-hint">Choose the answer you think is right.</p>
+        <button class="primary-button hidden" id="next-button" type="button">Next question <span aria-hidden="true">→</span></button>
+      </footer>
+    </section>
+
+    <section class="card screen result-screen hidden" id="result-screen" aria-labelledby="result-title">
+      <div class="result-icon" aria-hidden="true">✦</div>
+      <p class="eyebrow">Quiz complete</p>
+      <h1 id="result-title">Nice work!</h1>
+      <p class="score-number" id="final-score">0/25</p>
+      <p class="score-caption">correct answers</p>
+      <p class="result-copy" id="rating-message"></p>
+      <div class="result-actions">
+        <button class="primary-button" id="review-button" type="button">Review wrong answers</button>
+        <button class="secondary-button" id="restart-button" type="button">Restart quiz</button>
+      </div>
+    </section>
+
+    <section class="card screen hidden" id="review-screen" aria-labelledby="review-title">
+      <p class="eyebrow">Learn from the tricky ones</p>
+      <h1 class="review-heading" id="review-title">Review your answers</h1>
+      <p class="review-intro" id="review-intro"></p>
+      <div id="review-content"></div>
+      <div class="result-actions">
+        <button class="secondary-button" id="back-to-results-button" type="button">Back to results</button>
+        <button class="primary-button" id="review-restart-button" type="button">Play again</button>
+      </div>
+    </section>
+
+    <p class="page-note">Take your time, trust your first thought, and have fun.</p>
+  </main>
+
+  <script>
+    const questions = [
+      {
+        question: "Which planet is known as the Red Planet?",
+        options: ["Venus", "Mars", "Jupiter", "Mercury"],
+        answer: 1,
+        explanation: "Mars looks reddish because iron-rich dust covers much of its surface."
+      },
+      {
+        question: "What is the largest ocean on Earth?",
+        options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
+        answer: 3,
+        explanation: "The Pacific Ocean is the largest and deepest ocean on our planet."
+      },
+      {
+        question: "How many sides does a hexagon have?",
+        options: ["Five", "Six", "Seven", "Eight"],
+        answer: 1,
+        explanation: "A hexagon is a polygon with six sides."
+      },
+      {
+        question: "What is the capital city of Japan?",
+        options: ["Kyoto", "Osaka", "Tokyo", "Hiroshima"],
+        answer: 2,
+        explanation: "Tokyo is Japan's capital and one of the world's most populous cities."
+      },
+      {
+        question: "Which gas do plants absorb from the air?",
+        options: ["Oxygen", "Nitrogen", "Carbon dioxide", "Hydrogen"],
+        answer: 2,
+        explanation: "Plants use carbon dioxide, water, and sunlight to make food through photosynthesis."
+      },
+      {
+        question: "What is the fastest land animal?",
+        options: ["Lion", "Cheetah", "Horse", "Leopard"],
+        answer: 1,
+        explanation: "A cheetah can sprint faster than any other land animal."
+      },
+      {
+        question: "How many colors are traditionally named in a rainbow?",
+        options: ["Five", "Six", "Seven", "Eight"],
+        answer: 2,
+        explanation: "The traditional list has seven colors: red, orange, yellow, green, blue, indigo, and violet."
+      },
+      {
+        question: "Which instrument has keys, pedals, and strings?",
+        options: ["Flute", "Piano", "Drum", "Trumpet"],
+        answer: 1,
+        explanation: "A piano's keys operate hammers that strike strings inside the instrument."
+      },
+      {
+        question: "What is the largest mammal in the world?",
+        options: ["African elephant", "Blue whale", "Giraffe", "Orca"],
+        answer: 1,
+        explanation: "The blue whale is the largest mammal—and the largest animal—known to have lived."
+      },
+      {
+        question: "Which language is primarily spoken in Brazil?",
+        options: ["Spanish", "French", "Portuguese", "Italian"],
+        answer: 2,
+        explanation: "Portuguese is Brazil's official and most widely spoken language."
+      },
+      {
+        question: "At what temperature does water freeze in Celsius?",
+        options: ["0°C", "10°C", "32°C", "100°C"],
+        answer: 0,
+        explanation: "Pure water freezes at 0°C under standard atmospheric pressure."
+      },
+      {
+        question: "Which shape has three sides?",
+        options: ["Rectangle", "Triangle", "Pentagon", "Circle"],
+        answer: 1,
+        explanation: "A triangle is a polygon with three sides and three angles."
+      },
+      {
+        question: "Which organ pumps blood around the human body?",
+        options: ["Lungs", "Brain", "Heart", "Liver"],
+        answer: 2,
+        explanation: "The heart is a muscle that pumps blood through the body's circulatory system."
+      },
+      {
+        question: "What is the closest star to Earth?",
+        options: ["Sirius", "The Sun", "Proxima Centauri", "Polaris"],
+        answer: 1,
+        explanation: "The Sun is the star at the center of our solar system and the closest star to Earth."
+      },
+      {
+        question: "How many days are there in a leap year?",
+        options: ["364", "365", "366", "367"],
+        answer: 2,
+        explanation: "A leap year has 366 days, with an extra day added to February."
+      },
+      {
+        question: "Which metal is liquid at room temperature?",
+        options: ["Iron", "Copper", "Mercury", "Aluminum"],
+        answer: 2,
+        explanation: "Mercury is a metal that stays liquid at typical room temperatures."
+      },
+      {
+        question: "Which continent is the Sahara Desert in?",
+        options: ["Asia", "South America", "Africa", "Australia"],
+        answer: 2,
+        explanation: "The Sahara stretches across much of northern Africa."
+      },
+      {
+        question: "What do bees collect from flowers to make honey?",
+        options: ["Nectar", "Sap", "Dew", "Pollen only"],
+        answer: 0,
+        explanation: "Bees collect nectar and transform it into honey in the hive."
+      },
+      {
+        question: "Which is the smallest prime number?",
+        options: ["0", "1", "2", "3"],
+        answer: 2,
+        explanation: "Two is the smallest prime number and the only even prime."
+      },
+      {
+        question: "What is the main ingredient in traditional guacamole?",
+        options: ["Cucumber", "Avocado", "Green pepper", "Peas"],
+        answer: 1,
+        explanation: "Mashed avocado is the main ingredient in guacamole."
+      },
+      {
+        question: "Which bird is often associated with delivering messages in the past?",
+        options: ["Pigeon", "Peacock", "Ostrich", "Penguin"],
+        answer: 0,
+        explanation: "Homing pigeons were trained to carry messages back to their home lofts."
+      },
+      {
+        question: "What is the process called when liquid water becomes water vapor?",
+        options: ["Freezing", "Condensation", "Evaporation", "Melting"],
+        answer: 2,
+        explanation: "Evaporation happens when liquid water changes into water vapor."
+      },
+      {
+        question: "Which country is famous for the ancient pyramids at Giza?",
+        options: ["Greece", "Egypt", "Mexico", "India"],
+        answer: 1,
+        explanation: "The Giza pyramid complex is in Egypt, near the city of Cairo."
+      },
+      {
+        question: "How many minutes are there in one hour?",
+        options: ["30", "45", "60", "90"],
+        answer: 2,
+        explanation: "One hour contains 60 minutes."
+      },
+      {
+        question: "Which part of a plant usually takes in water from the soil?",
+        options: ["Flower", "Leaf", "Stem", "Roots"],
+        answer: 3,
+        explanation: "Roots absorb water and minerals from the soil and help anchor the plant."
+      }
+    ];
+
+    const welcomeScreen = document.getElementById("welcome-screen");
+    const quizScreen = document.getElementById("quiz-screen");
+    const resultScreen = document.getElementById("result-screen");
+    const reviewScreen = document.getElementById("review-screen");
+    const questionCount = document.getElementById("question-count");
+    const liveScore = document.getElementById("live-score");
+    const quizProgress = document.getElementById("quiz-progress");
+    const progressFill = document.getElementById("progress-fill");
+    const timerLabel = document.getElementById("timer-label");
+    const timerProgress = document.getElementById("timer-progress");
+    const timerFill = document.getElementById("timer-fill");
+    const questionTitle = document.getElementById("question-title");
+    const optionsContainer = document.getElementById("options");
+    const answerFeedback = document.getElementById("answer-feedback");
+    const footerHint = document.getElementById("footer-hint");
+    const nextButton = document.getElementById("next-button");
+
+    let questionIndex = 0;
+    let score = 0;
+    let secondsLeft = 30;
+    let timerId = null;
+    let questionLocked = false;
+    let wrongAnswers = [];
+
+    function showScreen(screen) {
+      [welcomeScreen, quizScreen, resultScreen, reviewScreen].forEach((item) => {
+        item.classList.toggle("hidden", item !== screen);
+      });
+    }
+
+    function startQuiz() {
+      questionIndex = 0;
+      score = 0;
+      wrongAnswers = [];
+      liveScore.textContent = "Score: 0";
+      showScreen(quizScreen);
+      renderQuestion();
+      questionTitle.focus();
+    }
+
+    function renderQuestion() {
+      stopTimer();
+      questionLocked = false;
+      secondsLeft = 30;
+
+      const current = questions[questionIndex];
+      questionCount.textContent = `Question ${questionIndex + 1} of ${questions.length}`;
+      quizProgress.setAttribute("aria-valuemax", String(questions.length));
+      quizProgress.setAttribute("aria-valuenow", String(questionIndex + 1));
+      progressFill.style.width = `${((questionIndex + 1) / questions.length) * 100}%`;
+      questionTitle.textContent = current.question;
+      answerFeedback.classList.add("hidden");
+      answerFeedback.replaceChildren();
+      nextButton.classList.add("hidden");
+      nextButton.textContent = questionIndex === questions.length - 1 ? "See my results" : "Next question →";
+      footerHint.textContent = "Choose the answer you think is right.";
+
+      optionsContainer.replaceChildren();
+      current.options.forEach((option, index) => {
+        const button = document.createElement("button");
+        button.className = "option-button";
+        button.type = "button";
+        button.dataset.index = String(index);
+
+        const letter = document.createElement("span");
+        letter.className = "option-letter";
+        letter.setAttribute("aria-hidden", "true");
+        letter.textContent = String.fromCharCode(65 + index);
+
+        const text = document.createElement("span");
+        text.className = "option-text";
+        text.textContent = option;
+
+        button.append(letter, text);
+        button.addEventListener("click", () => chooseAnswer(index));
+        optionsContainer.append(button);
+      });
+
+      updateTimerDisplay();
+      startTimer();
+    }
+
+    function chooseAnswer(selectedIndex) {
+      if (questionLocked) return;
+
+      questionLocked = true;
+      stopTimer();
+
+      const current = questions[questionIndex];
+      const isCorrect = selectedIndex === current.answer;
+
+      if (isCorrect) {
+        score += 1;
+        liveScore.textContent = `Score: ${score}`;
+      } else {
+        wrongAnswers.push({ questionIndex, selectedIndex });
+      }
+
+      [...optionsContainer.querySelectorAll(".option-button")].forEach((button, index) => {
+        button.disabled = true;
+        if (index === current.answer) button.classList.add("correct");
+        if (index === selectedIndex && !isCorrect) button.classList.add("incorrect");
+      });
+
+      showFeedback(isCorrect ? "Correct!" : "Not quite.", current.explanation);
+      footerHint.textContent = isCorrect ? "Great job!" : "The correct answer is highlighted in green.";
+      nextButton.classList.remove("hidden");
+      nextButton.focus();
+    }
+
+    function showFeedback(title, explanation) {
+      const heading = document.createElement("strong");
+      heading.textContent = title;
+      const detail = document.createElement("span");
+      detail.textContent = explanation;
+      answerFeedback.replaceChildren(heading, detail);
+      answerFeedback.classList.remove("hidden");
+    }
+
+    function startTimer() {
+      updateTimerDisplay();
+      timerId = window.setInterval(() => {
+        secondsLeft -= 1;
+        updateTimerDisplay();
+        if (secondsLeft <= 0) {
+          stopTimer();
+          handleTimeout();
+        }
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerId !== null) {
+        window.clearInterval(timerId);
+        timerId = null;
+      }
+    }
+
+    function updateTimerDisplay() {
+      timerLabel.textContent = `00:${String(secondsLeft).padStart(2, "0")} left`;
+      timerProgress.setAttribute("aria-valuenow", String(secondsLeft));
+      timerFill.style.width = `${(secondsLeft / 30) * 100}%`;
+      timerFill.classList.toggle("low", secondsLeft <= 10 && secondsLeft > 5);
+      timerFill.classList.toggle("urgent", secondsLeft <= 5);
+    }
+
+    function handleTimeout() {
+      if (questionLocked) return;
+
+      questionLocked = true;
+      const current = questions[questionIndex];
+      wrongAnswers.push({ questionIndex, selectedIndex: null });
+      [...optionsContainer.querySelectorAll(".option-button")].forEach((button, index) => {
+        button.disabled = true;
+        if (index === current.answer) button.classList.add("correct");
+      });
+
+      showFeedback("Time's up!", current.explanation);
+      footerHint.textContent = "The correct answer is highlighted in green.";
+      nextButton.classList.remove("hidden");
+      nextButton.focus();
+    }
+
+    function goToNextQuestion() {
+      if (!questionLocked) return;
+
+      if (questionIndex === questions.length - 1) {
+        showResults();
+        return;
+      }
+
+      questionIndex += 1;
+      renderQuestion();
+      questionTitle.focus();
+    }
+
+    function showResults() {
+      stopTimer();
+      document.getElementById("final-score").textContent = `${score}/${questions.length}`;
+      document.getElementById("result-title").textContent = score === questions.length ? "Perfect score!" : "Nice work!";
+      document.getElementById("rating-message").textContent = getRatingMessage();
+      document.getElementById("review-button").textContent = wrongAnswers.length
+        ? `Review wrong answers (${wrongAnswers.length})`
+        : "Review answers";
+      showScreen(resultScreen);
+      document.getElementById("result-title").focus();
+    }
+
+    function getRatingMessage() {
+      const percentage = (score / questions.length) * 100;
+      if (percentage === 100) return "Amazing! You got every question right.";
+      if (percentage >= 80) return "Fantastic result! You really know your stuff.";
+      if (percentage >= 60) return "Great effort! You got more than half right.";
+      if (percentage >= 40) return "Good try! A quick review will help you learn even more.";
+      return "Every quiz is a chance to learn. Give it another go!";
+    }
+
+    function showReview() {
+      const reviewContent = document.getElementById("review-content");
+      const reviewIntro = document.getElementById("review-intro");
+      reviewContent.replaceChildren();
+      reviewIntro.textContent = wrongAnswers.length
+        ? `You missed ${wrongAnswers.length} ${wrongAnswers.length === 1 ? "question" : "questions"}. Here are the correct answers and explanations.`
+        : "You got every question right. Here is your score again!";
+
+      if (!wrongAnswers.length) {
+        const emptyMessage = document.createElement("div");
+        emptyMessage.className = "empty-review";
+        const heading = document.createElement("strong");
+        heading.textContent = "Perfect round!";
+        const detail = document.createElement("p");
+        detail.textContent = `You answered all ${questions.length} questions correctly.`;
+        emptyMessage.append(heading, detail);
+        reviewContent.append(emptyMessage);
+      } else {
+        const list = document.createElement("ol");
+        list.className = "review-list";
+
+        wrongAnswers.forEach(({ questionIndex: missedIndex, selectedIndex }) => {
+          const item = document.createElement("li");
+          item.className = "review-item";
+          const current = questions[missedIndex];
+          const title = document.createElement("h3");
+          title.textContent = `${missedIndex + 1}. ${current.question}`;
+
+          const yourAnswer = document.createElement("p");
+          yourAnswer.className = "review-wrong";
+          yourAnswer.textContent = selectedIndex === null
+            ? "Your answer: Time ran out"
+            : `Your answer: ${current.options[selectedIndex]}`;
+
+          const correctAnswer = document.createElement("p");
+          correctAnswer.className = "review-right";
+          correctAnswer.textContent = `Correct answer: ${current.options[current.answer]}`;
+
+          const explanation = document.createElement("p");
+          explanation.textContent = current.explanation;
+          item.append(title, yourAnswer, correctAnswer, explanation);
+          list.append(item);
+        });
+
+        reviewContent.append(list);
+      }
+
+      showScreen(reviewScreen);
+      document.getElementById("review-title").focus();
+    }
+
+    document.getElementById("start-button").addEventListener("click", startQuiz);
+    nextButton.addEventListener("click", goToNextQuestion);
+    document.getElementById("restart-button").addEventListener("click", startQuiz);
+    document.getElementById("review-restart-button").addEventListener("click", startQuiz);
+    document.getElementById("review-button").addEventListener("click", showReview);
+    document.getElementById("back-to-results-button").addEventListener("click", () => {
+      showScreen(resultScreen);
+      document.getElementById("result-title").focus();
+    });
+  </script>
+</body>
+</html>

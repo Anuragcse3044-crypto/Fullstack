@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Guess the Number</title>
+	<style>
+		body { font-family: Arial, sans-serif; }
+		main { max-width: 400px; margin: 40px auto; }
+		form { display: flex; gap: 8px; }
+		input, button { padding: 8px; }
+	</style>
+</head>
+<body>
+	<main>
+		<span class="tag">A little brain game</span>
+		<h1>Guess the Number</h1>
+		<p class="intro">I’m thinking of a number. Can you find it?</p>
+		<p class="range">Pick a whole number from <strong>1 to 100</strong></p>
+		<form id="guess-form">
+			<input id="guess" type="number" min="1" max="100" step="1" placeholder="Your guess" aria-label="Your guess" required>
+			<button type="submit">Guess</button>
+		</form>
+		<p class="message" id="message" role="status" aria-live="polite">Enter a number to get started.</p>
+		<p class="count" id="count">Guesses: 0</p>
+		<button class="reset" id="reset" type="button">New game</button>
+	</main>
+	<script>
+		(() => {
+			const form = document.getElementById('guess-form');
+			const input = document.getElementById('guess');
+			const message = document.getElementById('message');
+			const count = document.getElementById('count');
+			const submit = form.querySelector('button');
+			let answer;
+			let guesses;
+			let finished;
+
+			function startGame() {
+				answer = Math.floor(Math.random() * 100) + 1;
+				guesses = 0;
+				finished = false;
+				input.value = '';
+				input.disabled = false;
+				submit.disabled = false;
+				message.textContent = 'Enter a number to get started.';
+				count.textContent = 'Guesses: 0';
+				input.focus();
+			}
+
+			form.addEventListener('submit', (event) => {
+				event.preventDefault();
+				if (finished) return;
+				const value = Number(input.value);
+				if (!Number.isInteger(value) || value < 1 || value > 100) {
+					message.textContent = 'Enter a whole number from 1 to 100.';
+					input.focus();
+					return;
+				}
+				guesses += 1;
+				count.textContent = `Guesses: ${guesses}`;
+				if (value === answer) {
+					message.textContent = `Correct! The number was ${answer}. 🎉`;
+					finished = true;
+					input.disabled = true;
+					submit.disabled = true;
+				} else {
+					message.textContent = value < answer ? 'Too low — try a higher number!' : 'Too high — try a lower number!';
+					input.select();
+				}
+			});
+
+			document.getElementById('reset').addEventListener('click', startGame);
+			startGame();
+		})();
+	</script>
+</body>
+</html>
