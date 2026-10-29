@@ -5,17 +5,28 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Guess the Number</title>
 	<style>
-		body { font-family: Arial, sans-serif; }
-		main { max-width: 400px; margin: 40px auto; }
+		body { font-family: Arial, sans-serif; background: #f3f6fb; color: #243047; }
+		main { max-width: 400px; margin: 40px auto; padding: 28px; background: #fff; border-radius: 12px; box-shadow: 0 6px 20px #24304718; }
+		.tag { color: #5268d8; font-size: .85rem; font-weight: bold; }
+		h1 { margin: 8px 0; }
+		.intro, .range { color: #596579; }
 		form { display: flex; gap: 8px; }
-		input, button { padding: 8px; }
+		input, button { padding: 10px 12px; border: 1px solid #cbd3e1; border-radius: 6px; font: inherit; }
+		input { min-width: 0; flex: 1; }
+		button { background: #5268d8; color: white; border-color: #5268d8; cursor: pointer; }
+		button:hover { background: #4055c2; }
+		button:disabled { opacity: .6; cursor: not-allowed; }
+		input:focus, button:focus-visible { outline: 3px solid #5268d855; outline-offset: 2px; }
+		.message { min-height: 1.5em; margin: 18px 0 8px; }
+		.count { color: #596579; }
+		.reset { background: #fff; color: #5268d8; }
+		.reset:hover { background: #f0f2ff; }
+		@media (max-width: 480px) { main { margin: 20px 12px; padding: 22px; } }
 	</style>
 </head>
 <body>
 	<main>
-		<span class="tag">A little brain game</span>
 		<h1>Guess the Number</h1>
-		<p class="intro">I’m thinking of a number. Can you find it?</p>
 		<p class="range">Pick a whole number from <strong>1 to 100</strong></p>
 		<form id="guess-form">
 			<input id="guess" type="number" min="1" max="100" step="1" placeholder="Your guess" aria-label="Your guess" required>
