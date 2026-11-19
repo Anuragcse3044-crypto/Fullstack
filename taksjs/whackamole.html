@@ -4,60 +4,74 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Whack-a-Mole</title>
-	<style>
-		* { box-sizing: border-box; }
-		body {
-			margin: 0;
-			min-height: 100vh;
-			display: grid;
-			place-items: center;
-			padding: 24px;
-			background: #f3e8ff;
-			color: #35204f;
-			font-family: Arial, sans-serif;
-			text-align: center;
-		}
-		.game { width: min(100%, 430px); }
-		h1 { margin: 0 0 8px; color: #7041a6; }
-		.stats { display: flex; justify-content: space-around; margin: 18px 0; font-size: 1.15rem; }
-		.board {
-			display: grid;
-			grid-template-columns: repeat(3, 1fr);
-			gap: 12px;
-			padding: 16px;
-			border-radius: 18px;
-			background: #c4a7e7;
-		}
-		.hole {
-			position: relative;
-			height: 100px;
-			overflow: hidden;
-			border: 0;
-			border-radius: 50%;
-			background: #51356b;
-			box-shadow: inset 0 8px 0 #3c2750;
-			cursor: pointer;
-			font-size: 2.8rem;
-		}
-		.hole:focus-visible, #start:focus-visible { outline: 3px solid #f6bd35; outline-offset: 3px; }
-		.hole .mole { display: none; }
-		.hole.active .mole { display: inline; animation: pop .12s ease-out; }
-		@keyframes pop { from { transform: translateY(20px); } to { transform: translateY(0); } }
-		#start {
-			margin-top: 18px;
-			padding: 11px 26px;
-			border: 0;
-			border-radius: 8px;
-			background: #7041a6;
-			color: white;
-			font-size: 1rem;
-			font-weight: bold;
-			cursor: pointer;
-		}
-		#start:hover { background: #583284; }
-		#message { min-height: 1.4em; margin: 12px 0 0; }
-		@media (max-width: 360px) { .hole { height: 80px; } }
-	</style>
+<style>
+    * { box-sizing: border-box; }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 20px;
+        background: #f4f7f4;
+        color: #333;
+        font-family: Arial, sans-serif;
+        text-align: center;
+    }
+
+    .game {
+        width: min(100%, 430px);
+        padding: 24px;
+        background: white;
+        border-radius: 16px;
+    }
+
+    h1 { color: #43845b; }
+
+    .stats {
+        display: flex;
+        justify-content: space-around;
+        margin: 18px 0;
+    }
+
+    .board {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        padding: 14px;
+        background: #e7f0e8;
+        border-radius: 14px;
+    }
+
+    .hole {
+        height: 90px;
+        border: 0;
+        border-radius: 50%;
+        background: #fff;
+        cursor: pointer;
+        font-size: 2.5rem;
+    }
+
+    .hole .mole { display: none; }
+    .hole.active .mole { display: inline; }
+
+    #start {
+        margin-top: 18px;
+        padding: 11px 24px;
+        border: 0;
+        border-radius: 8px;
+        background: #43845b;
+        color: white;
+        cursor: pointer;
+    }
+
+    #start:hover { background: #326b47; }
+    #message { min-height: 1.4em; }
+
+    @media (max-width: 360px) {
+        .hole { height: 75px; }
+    }
+</style>
 </head>
 <body>
 	<main class="game">
